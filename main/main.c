@@ -18,7 +18,7 @@
 #include "vigilant.h"
 
 /* Set to 1 for transmitter, 0 for receiver. */
-#define BB_TRANSMITTER 0
+#define BB_TRANSMITTER 1
 
 #define BB_CHANNEL       6
 #define BB_MAX_PAYLOAD   512
@@ -86,14 +86,15 @@ static void initialize_nvs(void)
 
 static void initialize_wifi(void)
 {
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    // The following calls are already made in vigilant_init() and wifi_init_once():
+    // ESP_ERROR_CHECK(esp_netif_init()); 
+    // ESP_ERROR_CHECK(esp_event_loop_create_default()); // Collides with Vigilant's event loop in line 251
 
-    wifi_init_config_t config = WIFI_INIT_CONFIG_DEFAULT();
+    // wifi_init_config_t config = WIFI_INIT_CONFIG_DEFAULT();
 
-    ESP_ERROR_CHECK(esp_wifi_init(&config));
-    ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    // ESP_ERROR_CHECK(esp_wifi_init(&config));
+    // ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM)); // Already done in VE wifi_init_once()
+    // ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
 
 #if BB_TRANSMITTER
     /*
@@ -114,17 +115,17 @@ static void initialize_wifi(void)
     ));
 #endif
 
-    ESP_ERROR_CHECK(esp_wifi_start());
-    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
+    //ESP_ERROR_CHECK(esp_wifi_start());
+    //ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
 
     /*
      * Standalone mode only. If connected to an AP later, the AP determines
      * the channel and this call should be removed.
      */
-    ESP_ERROR_CHECK(esp_wifi_set_channel(
-        BB_CHANNEL,
-        WIFI_SECOND_CHAN_NONE
-    ));
+    //ESP_ERROR_CHECK(esp_wifi_set_channel( // W (628) wifi:STA is scanning or connecting, or AP has connected with external STAs, cannot set channel
+    //    BB_CHANNEL,
+    //    WIFI_SECOND_CHAN_NONE
+    //));
 }
 
 #if BB_TRANSMITTER
@@ -371,10 +372,13 @@ static void initialize_receiver(void)
 
 void app_main(void) {
     VigilantConfig VgConfig = {.unique_component_name = "Comms-Broadband",
-                               .network_mode = NW_MODE_APSTA};
+                               .network_mode = NW_MODE_STA};
     ESP_ERROR_CHECK(vigilant_init(VgConfig));
+    ESP_LOGI(TAG, "Broadband component initialized");
     initialize_nvs();
+    ESP_LOGI(TAG, "NVS initialized");
     initialize_wifi();
+    ESP_LOGI(TAG, "Wi-Fi initialized");
 
 #if BB_TRANSMITTER
     ESP_ERROR_CHECK(
