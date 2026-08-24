@@ -1,3 +1,5 @@
-#include "esp_log.h"
+#pragma once
+
+#include "esp_err.h"
 
 esp_err_t initBroadband(void);

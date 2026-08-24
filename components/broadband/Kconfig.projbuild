@@ -1,0 +1,101 @@
+menu "APOGEE Comms Broadband Component"
+    choice BB_COMM_TYPE
+        prompt "Communication Type"
+        default BB_COMM_TYPE_TX
+        help
+            Select the type of communication functionality to enable in Broadband Component.
+
+        config BB_COMM_TYPE_TX
+            bool "Transmitter Mode"
+            help
+                Enable Transmitter Mode functionality in Broadband Component.
+        
+        config BB_COMM_TYPE_RX
+            bool "Receiver Mode"
+            help
+                Enable Receiver Mode functionality in Broadband Component.
+    endchoice
+
+    config BB_CHANNEL
+        int "Broadband Wi-Fi Channel"
+        default 6
+        range 1 11
+        help
+            Set the Wi-Fi channel for broadband communication. Valid range is 1 to 11.
+
+    config BB_MAX_PAYLOAD
+        int "Maximum Payload Size"
+        default 512
+        range 1 2048
+        help
+            Set the maximum payload size for broadband communication in bytes. Valid range is 1 to 2048.
+
+    config BB_PROTOCOL_VER
+        int "Protocol Version"
+        default 1
+        range 1 10
+        help
+            Set the protocol version for broadband communication. Valid range is 1 to 10.
+
+            
+    if BB_COMM_TYPE_TX
+        config BB_BSSID
+            string "Broadband BSSID"
+            default "02:42:42:42:42:42"
+            help
+                Set the BSSID for broadband communication. Format should be a valid MAC address. Not an actual access point, but used for identification in the protocol.
+        config BB_BROADCAST_MAC
+            string "Broadband Broadcast MAC"
+            default "FF:FF:FF:FF:FF:FF"
+            help
+                Set the broadcast MAC address for broadband communication. Format should be a valid MAC address. Used for broadcasting messages in the protocol.        
+    
+        choice BB_WIFI_MODE
+            prompt "Wi-Fi Mode"
+            default BB_WIFI_PHY_RATE_6M
+            help
+                Configure the rate used by esp_wifi_80211_tx for broadband communication. This determines the Wi-Fi mode used for transmitting data.
+            
+            config BB_WIFI_PHY_RATE_1M_L
+                bool "DSSS + DBPSK 1 Mbps (802.11b)"
+                help
+                    Use 1 Mbps PHY rate for broadband communication. This corresponds to 802.11b mode.
+            
+            config BB_WIFI_PHY_RATE_2M_L
+                bool "DSSS + DQPSK 2 Mbps (802.11b)"
+                help
+                    Use 2 Mbps PHY rate for broadband communication. This corresponds to 802.11b mode.
+            
+            config BB_WIFI_PHY_RATE_6M
+                bool "OFDM + BPSK 6 Mbps (802.11g/n)"
+                help
+                    Use 6 Mbps PHY rate for broadband communication. This corresponds to 802.11g/n mode.
+            
+            config BB_WIFI_PHY_RATE_12M
+                bool "OFDM + QPSK 12 Mbps (802.11g/n)"
+                help
+                    Use 12 Mbps PHY rate for broadband communication. This corresponds to 802.11g/n mode.
+            
+            config BB_WIFI_PHY_RATE_24M
+                bool "OFDM + 16-QAM 24 Mbps (802.11g/n)"
+                help
+                    Use 24 Mbps PHY rate for broadband communication. This corresponds to 802.11g/n mode.
+
+            config BB_WIFI_PHY_RATE_48M
+                bool "OFDM + 64-QAM 48 Mbps (802.11g/n)"
+                help
+                    Use 48 Mbps PHY rate for broadband communication. This corresponds to 802.11g/n mode.
+
+            config BB_WIFI_PHY_RATE_MCS0_LGI
+                bool "OFDM + MCS0 Long GI (802.11n)"
+                help
+                    Use MCS0 Long GI PHY rate for broadband communication. This corresponds to 802.11n mode.
+        endchoice
+
+    endif
+
+
+        
+
+
+endmenu
