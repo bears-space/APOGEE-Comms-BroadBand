@@ -86,16 +86,6 @@ static void initialize_nvs(void)
 
 static void initialize_wifi(void)
 {
-    // The following calls are already made in vigilant_init() and wifi_init_once():
-    // ESP_ERROR_CHECK(esp_netif_init()); 
-    // ESP_ERROR_CHECK(esp_event_loop_create_default()); // Collides with Vigilant's event loop in line 251
-
-    // wifi_init_config_t config = WIFI_INIT_CONFIG_DEFAULT();
-
-    // ESP_ERROR_CHECK(esp_wifi_init(&config));
-    // ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM)); // Already done in VE wifi_init_once()
-    // ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-
 #if BB_TRANSMITTER
     /*
      * Configure the rate used by esp_wifi_80211_tx().
@@ -114,18 +104,6 @@ static void initialize_wifi(void)
         WIFI_PHY_RATE_6M
     ));
 #endif
-
-    //ESP_ERROR_CHECK(esp_wifi_start());
-    //ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
-
-    /*
-     * Standalone mode only. If connected to an AP later, the AP determines
-     * the channel and this call should be removed.
-     */
-    //ESP_ERROR_CHECK(esp_wifi_set_channel( // W (628) wifi:STA is scanning or connecting, or AP has connected with external STAs, cannot set channel
-    //    BB_CHANNEL,
-    //    WIFI_SECOND_CHAN_NONE
-    //));
 }
 
 #if BB_TRANSMITTER
