@@ -370,9 +370,9 @@ static void initialize_receiver(void)
 
 
 void app_main(void) {
-    // VigilantConfig VgConfig = {.unique_component_name = "Vigilant ESP Test",
-    //                            .network_mode = NW_MODE_APSTA};
-    // ESP_ERROR_CHECK(vigilant_init(VgConfig));
+    VigilantConfig VgConfig = {.unique_component_name = "Comms-Broadband",
+                               .network_mode = NW_MODE_APSTA};
+    ESP_ERROR_CHECK(vigilant_init(VgConfig));
     initialize_nvs();
     initialize_wifi();
 
