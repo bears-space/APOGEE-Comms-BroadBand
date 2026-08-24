@@ -1,13 +1,13 @@
 idf_component_register(
-    SRCS "main.c"
-    INCLUDE_DIRS "."
+    SRCS "broadband.c"
+    INCLUDE_DIRS "include"
     REQUIRES
-        broadband
-        vigilant_engine
+        esp_common
     PRIV_REQUIRES
-        esp_wifi
         esp_event
         esp_netif
         esp_timer
+        esp_wifi
+        log
         nvs_flash
 )
