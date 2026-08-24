@@ -18,6 +18,32 @@ static const char *TAG = "broadband";
 
 #if BB_TRANSMITTER // tx mode
 
+// Map the Kconfig PHY rate selection to the corresponding ESP-IDF Wi-Fi PHY rate constant.
+#if defined(CONFIG_BB_WIFI_PHY_RATE_1M_L)
+    #define BB_WIFI_TX_RATE WIFI_PHY_RATE_1M_L
+
+#elif defined(CONFIG_BB_WIFI_PHY_RATE_2M_L)
+    #define BB_WIFI_TX_RATE WIFI_PHY_RATE_2M_L
+
+#elif defined(CONFIG_BB_WIFI_PHY_RATE_6M)
+    #define BB_WIFI_TX_RATE WIFI_PHY_RATE_6M
+
+#elif defined(CONFIG_BB_WIFI_PHY_RATE_12M)
+    #define BB_WIFI_TX_RATE WIFI_PHY_RATE_12M
+
+#elif defined(CONFIG_BB_WIFI_PHY_RATE_24M)
+    #define BB_WIFI_TX_RATE WIFI_PHY_RATE_24M
+
+#elif defined(CONFIG_BB_WIFI_PHY_RATE_48M)
+    #define BB_WIFI_TX_RATE WIFI_PHY_RATE_48M
+
+#elif defined(CONFIG_BB_WIFI_PHY_RATE_MCS0_LGI)
+    #define BB_WIFI_TX_RATE WIFI_PHY_RATE_MCS0_LGI
+
+#else
+    #error "No broadband Wi-Fi PHY rate selected"
+#endif
+
 static uint8_t transmitter_mac[6];
 static uint32_t next_packet_sequence;
 
@@ -85,11 +111,6 @@ static esp_err_t bb_send(
 
     ieee80211Header_t *wifi_header = (void *)frame;
 
-    /*
-     * Frame Control:
-     * version=0, type=data, subtype=normal data
-     * ToDS=0, FromDS=0, Retry=0, Protected=0
-     */
     wifi_header->frame_control[0] = 0x08;
     wifi_header->frame_control[1] = 0x00;
 
@@ -116,10 +137,7 @@ static esp_err_t bb_send(
         offset += payload_length;
     }
 
-    /*
-     * true lets the Wi-Fi driver generate the 802.11 sequence number.
-     * Do not append an FCS; the hardware generates it.
-     */
+    // when set to true, the driver automatically does the seq numebr
     return esp_wifi_80211_tx(
         WIFI_IF_STA,
         frame,
@@ -304,21 +322,9 @@ esp_err_t initBroadband(void) {
     parseConfigMacs(); 
     ESP_LOGI(TAG, "Initializing wifi");
     #if BB_TRANSMITTER
-        /*
-        * Configure the rate used by esp_wifi_80211_tx().
-        *
-        * Alternatives:
-        * WIFI_PHY_RATE_1M_L       DSSS + DBPSK
-        * WIFI_PHY_RATE_2M_L       DSSS + DQPSK
-        * WIFI_PHY_RATE_6M         OFDM + BPSK
-        * WIFI_PHY_RATE_12M        OFDM + QPSK
-        * WIFI_PHY_RATE_24M        OFDM + 16-QAM
-        * WIFI_PHY_RATE_48M        OFDM + 64-QAM
-        * WIFI_PHY_RATE_MCS0_LGI   HT-OFDM + BPSK
-        */
         ESP_ERROR_CHECK(esp_wifi_config_80211_tx_rate(
             WIFI_IF_STA,
-            WIFI_PHY_RATE_6M
+            BB_WIFI_TX_RATE
         ));
     #endif
     ESP_LOGI(TAG, "Wi-Fi initialized");

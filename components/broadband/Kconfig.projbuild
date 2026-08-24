@@ -40,45 +40,56 @@ menu "APOGEE Comms Broadband Component"
             
     if BB_COMM_TYPE_TX
         choice BB_WIFI_MODE
-            prompt "Wi-Fi Mode"
+            prompt "Wi-Fi PHY Rate"
             default BB_WIFI_PHY_RATE_6M
             help
-                Configure the rate used by esp_wifi_80211_tx for broadband communication. This determines the Wi-Fi mode used for transmitting data.
-            
+                Select the PHY rate used by esp_wifi_80211_tx() for broadband
+                transmission. This controls the modulation, coding rate, and
+                nominal physical-layer data rate of transmitted packets.
+
             config BB_WIFI_PHY_RATE_1M_L
-                bool "DSSS + DBPSK 1 Mbps (802.11b)"
+                bool "DSSS + DBPSK, 1 Mbps (802.11b, long preamble)"
                 help
-                    Use 1 Mbps PHY rate for broadband communication. This corresponds to 802.11b mode.
-            
+                    Use the legacy 802.11b DSSS PHY with DBPSK modulation
+                    and a long preamble at 1 Mbps.
+
             config BB_WIFI_PHY_RATE_2M_L
-                bool "DSSS + DQPSK 2 Mbps (802.11b)"
+                bool "DSSS + DQPSK, 2 Mbps (802.11b, long preamble)"
                 help
-                    Use 2 Mbps PHY rate for broadband communication. This corresponds to 802.11b mode.
-            
+                    Use the legacy 802.11b DSSS PHY with DQPSK modulation
+                    and a long preamble at 2 Mbps.
+
             config BB_WIFI_PHY_RATE_6M
-                bool "OFDM + BPSK 6 Mbps (802.11g/n)"
+                bool "OFDM + BPSK 1/2, 6 Mbps (802.11g)"
                 help
-                    Use 6 Mbps PHY rate for broadband communication. This corresponds to 802.11g/n mode.
-            
+                    Use the legacy 802.11g OFDM PHY with BPSK modulation
+                    and a 1/2 coding rate at 6 Mbps.
+
             config BB_WIFI_PHY_RATE_12M
-                bool "OFDM + QPSK 12 Mbps (802.11g/n)"
+                bool "OFDM + QPSK 1/2, 12 Mbps (802.11g)"
                 help
-                    Use 12 Mbps PHY rate for broadband communication. This corresponds to 802.11g/n mode.
-            
+                    Use the legacy 802.11g OFDM PHY with QPSK modulation
+                    and a 1/2 coding rate at 12 Mbps.
+
             config BB_WIFI_PHY_RATE_24M
-                bool "OFDM + 16-QAM 24 Mbps (802.11g/n)"
+                bool "OFDM + 16-QAM 1/2, 24 Mbps (802.11g)"
                 help
-                    Use 24 Mbps PHY rate for broadband communication. This corresponds to 802.11g/n mode.
+                    Use the legacy 802.11g OFDM PHY with 16-QAM modulation
+                    and a 1/2 coding rate at 24 Mbps.
 
             config BB_WIFI_PHY_RATE_48M
-                bool "OFDM + 64-QAM 48 Mbps (802.11g/n)"
+                bool "OFDM + 64-QAM 2/3, 48 Mbps (802.11g)"
                 help
-                    Use 48 Mbps PHY rate for broadband communication. This corresponds to 802.11g/n mode.
+                    Use the legacy 802.11g OFDM PHY with 64-QAM modulation
+                    and a 2/3 coding rate at 48 Mbps.
 
             config BB_WIFI_PHY_RATE_MCS0_LGI
-                bool "OFDM + MCS0 Long GI (802.11n)"
+                bool "HT-OFDM + BPSK 1/2, MCS0 long GI (802.11n)"
                 help
-                    Use MCS0 Long GI PHY rate for broadband communication. This corresponds to 802.11n mode.
+                    Use the 802.11n HT PHY with BPSK modulation, a 1/2 coding
+                    rate, and a long guard interval. With a 20 MHz channel,
+                    MCS0 provides a nominal PHY rate of 6.5 Mbps.
+
         endchoice
     endif
     config BB_BSSID
