@@ -39,17 +39,6 @@ menu "APOGEE Comms Broadband Component"
 
             
     if BB_COMM_TYPE_TX
-        config BB_BSSID
-            string "Broadband BSSID"
-            default "02:42:42:42:42:42"
-            help
-                Set the BSSID for broadband communication. Format should be a valid MAC address. Not an actual access point, but used for identification in the protocol.
-        config BB_BROADCAST_MAC
-            string "Broadband Broadcast MAC"
-            default "FF:FF:FF:FF:FF:FF"
-            help
-                Set the broadcast MAC address for broadband communication. Format should be a valid MAC address. Used for broadcasting messages in the protocol.        
-    
         choice BB_WIFI_MODE
             prompt "Wi-Fi Mode"
             default BB_WIFI_PHY_RATE_6M
@@ -91,11 +80,15 @@ menu "APOGEE Comms Broadband Component"
                 help
                     Use MCS0 Long GI PHY rate for broadband communication. This corresponds to 802.11n mode.
         endchoice
-
     endif
-
-
-        
-
-
+    config BB_BSSID
+        string "Broadband BSSID"
+        default "02:42:42:42:42:42"
+        help
+            Set the BSSID for broadband communication. Format should be a valid MAC address. Not an actual access point, but used for identification in the protocol.
+    config BB_BROADCAST_MAC
+        string "Broadband Broadcast MAC"
+        default "FF:FF:FF:FF:FF:FF"
+        help
+            Set the broadcast MAC address for broadband communication. Format should be a valid MAC address. Used for broadcasting messages in the protocol.        
 endmenu
